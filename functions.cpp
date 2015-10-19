@@ -9,14 +9,6 @@ Class: CSC300 Data Structures, Fall 2015 (sample code for PA#2)
 Ref: Based on code from RgbImage.cc (Buss, 3-D Computer Graphics, 2003).
 */
 
-#include <cstdio>
-
-// prototypes
-bool LoadBmpFile( const char* filename, int &NumRows, int &NumCols, unsigned char* &ImagePtr );
-static short readShort( FILE* infile );
-static int readLong( FILE* infile );
-static void skipChars( FILE* infile, int numChars );
-static inline int GetNumBytesPerRow( int NumCols );
 
 /* ********************************************************************
  *  LoadBmpFile
@@ -24,7 +16,8 @@ static inline int GetNumBytesPerRow( int NumCols );
  *  Return true for success, false for failure.
  *  Author: Sam Buss December 2001.
  **********************************************************************/
-
+#include "functions.h"
+ 
 bool LoadBmpFile( const char* filename, int &NumRows, int &NumCols, unsigned char* &ImagePtr )
 {
     FILE* infile = fopen( filename, "rb" );		// open binary BMP file for reading

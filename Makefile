@@ -15,21 +15,19 @@ LINK = g++
 # Preprocessor and compiler flags (turn on warning, optimization, and debugging):
 # CPPFLAGS = <preprocessor flags go here>
 
-CFLAGS = -Wall -O -g
+CFLAGS = -Wall -O -g  -std=c++11
 CXXFLAGS = $(CFLAGS)
 
-# OpenGL/Mesa libraries for Linux
-GL_LIBS = -lglut -lGLU -lGL -lm
 
 #------------------------------------------------------------------------------
 # Targets
 
-all: paint
+all: quad
 
 #------------------------------------------------------------------------------
 
-paint:	ellipses.o paint.o callbacks.o globals.o graphics.o rectangle.o shape.o line.o
-	$(LINK) -o $@ $^ $(GL_LIBS)
+quad:	quad.o functions.o
+	$(LINK) -o $@ $^
 
 #------------------------------------------------------------------------------
 
@@ -37,4 +35,4 @@ clean:
 	rm -f *.o *~ core
 
 cleanall:
-	rm -f *.o *~ core paint
+	rm -f *.o *~ core quad
