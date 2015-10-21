@@ -15,7 +15,8 @@ struct Qnode
 */
 };
 
-void evaluateQuad ( int epsilon, Qnode* &root, const unsigned char** &image );
+bool evaluateQuad ( int epsilon, Qnode* root, unsigned char** image );
 int getRange ( unsigned char** image, Qnode* root );
 int getMean ( unsigned char** image, Qnode* root);
+bool divideQuad (Qnode* root);
 

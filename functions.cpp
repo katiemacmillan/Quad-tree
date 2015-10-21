@@ -82,13 +82,13 @@ bool LoadBmpFile( const char* filename, int &NumRows, int &NumCols, unsigned cha
     // read image RGB data
     for ( int i = 0; i < NumRows; i++ )
     {
-        cout << "\nrow-" << i << "  " << endl;
+//        cout << "\nrow-" << i << "  " << endl;
         for ( int j = 0; j < NumCols; j++ )
         {
             ImagePtr[i][j] = fgetc( infile );		// Grayscale Image
 //            cout << "pixel-" << j << "  ";
         }
-        cout << endl;
+//        cout << endl;
         //skipChars( infile, GetNumBytesPerRow(NumCols) - NumCols ); // Skip 6 more fields
 
         // for ( int k =NumCols ; k < GetNumBytesPerRow( NumCols ); k++ )
@@ -124,7 +124,7 @@ bool LoadBmpFile( const char* filename, int &NumRows, int &NumCols, unsigned cha
 }
 
 // rows are word aligned
-static inline int GetNumBytesPerRow( int NumCols )
+inline int GetNumBytesPerRow( int NumCols )
 {
     return ( ( 3 * NumCols + 3 ) >> 2 ) << 2;
 }
