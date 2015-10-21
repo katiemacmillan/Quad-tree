@@ -18,7 +18,7 @@ Ref: Based on code from RgbImage.cc (Buss, 3-D Computer Graphics, 2003).
  **********************************************************************/
 #include "functions.h"
  
-bool LoadBmpFile( const char* filename, int &NumRows, int &NumCols, unsigned char* &ImagePtr )
+bool LoadBmpFile( const char* filename, int &NumRows, int &NumCols, unsigned char** &ImagePtr )
 {
     FILE* infile = fopen( filename, "rb" );		// open binary BMP file for reading
     if ( !infile )
@@ -56,7 +56,8 @@ bool LoadBmpFile( const char* filename, int &NumRows, int &NumCols, unsigned cha
     }
 
     // allocate memory
-    ImagePtr = new unsigned char[ NumRows * GetNumBytesPerRow( NumCols ) ];
+    ImagePtr = new unsigned char*[ NumRows ];
+
     if ( !ImagePtr )
     {
         fclose ( infile );
@@ -64,25 +65,37 @@ bool LoadBmpFile( const char* filename, int &NumRows, int &NumCols, unsigned cha
                  NumRows, NumCols, filename );
         return false;
     }
+    for (int i = 0; i < NumRows; i++)
+    {
+        ImagePtr[i] = new unsigned char [NumCols];
+        if ( !ImagePtr[i] )
+        {
+            fclose ( infile );
+            fprintf( stderr, "Unable to allocate memory for %i x %i bitmap: %s.\n",
+                     NumRows, NumCols, filename );
+            return false;
+        }
+    }
+
+//    unsigned char** cPtr = ImagePtr;
 
     // read image RGB data
-    unsigned char* cPtr = ImagePtr;
     for ( int i = 0; i < NumRows; i++ )
     {
-        int j;
-        for ( j = 0; j < NumCols; j++ )
+        cout << "\nrow-" << i << "  " << endl;
+        for ( int j = 0; j < NumCols; j++ )
         {
-            *( cPtr + 2 ) = fgetc( infile );	// Blue color value
-            *( cPtr + 1 ) = fgetc( infile );	// Green color value
-            *cPtr = fgetc( infile );		// Red color value
-            cPtr += 3;
+            ImagePtr[i][j] = fgetc( infile );		// Grayscale Image
+//            cout << "pixel-" << j << "  ";
         }
-        int k = 3 * NumCols;			// number of bytes already read
-        for ( ; k < GetNumBytesPerRow( NumCols ); k++ )
-        {
-            fgetc( infile );			// ignore padding
-            *( cPtr++ ) = 0;
-        }
+        cout << endl;
+        //skipChars( infile, GetNumBytesPerRow(NumCols) - NumCols ); // Skip 6 more fields
+
+        // for ( int k =NumCols ; k < GetNumBytesPerRow( NumCols ); k++ )
+        // {
+        //     cout << "skip-" << k << "  ";
+        //     fgetc( infile );			// ignore padding
+        // }
     }
 
     // and... we should be done
@@ -92,6 +105,18 @@ bool LoadBmpFile( const char* filename, int &NumRows, int &NumCols, unsigned cha
         fprintf( stderr, "Premature end of file: %s.\n", filename );
         return false;
     }
+
+    // for ( int i = 0; i < NumRows; i++ )
+    // {
+    //     int j;
+    //     for ( j = 0; j < NumCols; j++ )
+    //     {
+    //         cout << *( cPtr + 2 ) << " ";   // Blue color value
+    //         cout << *( cPtr + 1 ) << " ";    // Green color value
+    //         cout << *cPtr << endl;       // Red color value
+    //         cPtr += 3;
+    //     }
+    // }
 
     fclose( infile );	// Close the file
 
